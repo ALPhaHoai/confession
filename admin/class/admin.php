@@ -24,8 +24,8 @@ class admin
     {
         $this->id = $id;
         $this->db = db::singleton();
-        if(is_numeric($this->id)){
-            if($this->db->select_sql_one_row("SELECT id,avatar, name, email, date_created FROM " . TB_ADMIN . " WHERE id = $this->id")){
+        if (is_numeric($this->id)) {
+            if ($this->db->select_sql_one_row("SELECT id,avatar, name, email, date_created FROM " . TB_ADMIN . " WHERE id = $this->id")) {
                 $result = $this->db->kq;
                 $this->email = $result->email;
                 $this->name = $result->name;
@@ -35,15 +35,16 @@ class admin
     }
 
 
-
-    public function getTotalPost(){
-        if($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST)){
+    public function getTotalPost()
+    {
+        if ($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST)) {
             return intval($this->db->kq->total);
         } else return null;
     }
 
-    public function getTotalPostNotYetApproval(){
-        if($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE approval = 'not yet'")){
+    public function getTotalPostNotYetApproval()
+    {
+        if ($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE approval = 'not yet'")) {
             return intval($this->db->kq->total);
         } else return null;
     }
@@ -53,14 +54,16 @@ class admin
      * Nổi bật: có lượng like or dislike > 2/3 mức trung bình
      * Gần đây: 7 ngày
      * */
-    public function getTotalHighlightsPost(){
-        if($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE approval = 'not yet'")){
+    public function getTotalHighlightsPost()
+    {
+        if ($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE approval = 'not yet'")) {
             return intval($this->db->kq->total);
         } else return null;
     }
 
-    public function getTotalPost24h(){
-        if($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE date_created > DATE_SUB(NOW(), INTERVAL 24 HOUR)")){
+    public function getTotalPost24h()
+    {
+        if ($this->db->select_sql_one_row("SELECT count(*) as total FROM " . TB_POST . " WHERE date_created > DATE_SUB(NOW(), INTERVAL 24 HOUR)")) {
             return intval($this->db->kq->total);
         } else return null;
     }
@@ -71,7 +74,7 @@ class admin
     public function getAllPost($page)
     {
         $start = $page * $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'];
-        if($this->db->select_sql("SELECT * FROM " . TB_POST . " LIMIT $start," . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])){
+        if ($this->db->select_sql("SELECT post.id, post.content, post.approval, post.approval_time, admin.name, post.view, post.like, post.dislike, post.cmt, post.date_created FROM post LEFT JOIN admin ON post.approval_by = admin.id LIMIT $start," . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])) {
             return $this->db->kq;
         } else return null;
     }
@@ -82,7 +85,7 @@ class admin
      * */
     public function getRecentlyPostNotYetApproval()
     {
-        if($this->db->select_sql("SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM " . TB_POST . " where user_id = uid) as num_user_post FROM " . TB_POST . " WHERE approval = 'not yet' ORDER BY date_created ASC LIMIT " . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])){
+        if ($this->db->select_sql("SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM " . TB_POST . " where user_id = uid) as num_user_post FROM " . TB_POST . " WHERE approval = 'not yet' ORDER BY date_created ASC LIMIT " . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])) {
             return $this->db->kq;
         } else return null;
     }
@@ -92,7 +95,7 @@ class admin
      * */
     public function getRecentlyPostApproved()
     {
-        if($this->db->select_sql("SELECT ".TB_POST.".*, ".TB_ADMIN.".name as approval_by_name FROM " . TB_POST . " INNER JOIN " . TB_ADMIN . " ON " .TB_ADMIN . ".id = " . TB_POST .".approval_by  WHERE approval = 'yes' ORDER BY approval_time DESC LIMIT " . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])){
+        if ($this->db->select_sql("SELECT " . TB_POST . ".*, " . TB_ADMIN . ".name as approval_by_name FROM " . TB_POST . " INNER JOIN " . TB_ADMIN . " ON " . TB_ADMIN . ".id = " . TB_POST . ".approval_by  WHERE approval = 'yes' ORDER BY approval_time DESC LIMIT " . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])) {
             return $this->db->kq;
         } else return null;
     }

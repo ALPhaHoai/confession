@@ -37,9 +37,9 @@ if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
 
 <body class="">
 <div class="wrapper ">
-<?php
-include __DIR__ . "/include/sidebar.php";
-?>
+    <?php
+    include __DIR__ . "/include/sidebar.php";
+    ?>
     <div class="main-panel">
         <!-- Navbar -->
         <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
@@ -78,7 +78,7 @@ include __DIR__ . "/include/sidebar.php";
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="material-icons">notifications</i>
                                 <?php
-                                if($totalNotYetApproval > 0) echo '<span class="notification">'.$totalNotYetApproval.'</span>';
+                                if ($totalNotYetApproval > 0) echo '<span class="notification">' . $totalNotYetApproval . '</span>';
                                 ?>
                                 <p class="d-lg-none d-md-block">
                                     Some Actions
@@ -86,7 +86,7 @@ include __DIR__ . "/include/sidebar.php";
                             </a>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                                 <?php
-                                if($totalNotYetApproval > 0) echo '<a class="dropdown-item" href="#">Bạn có '. $totalNotYetApproval .' bài viết cần phê duyệt</a>';
+                                if ($totalNotYetApproval > 0) echo '<a class="dropdown-item" href="#">Bạn có ' . $totalNotYetApproval . ' bài viết cần phê duyệt</a>';
                                 ?>
 
                             </div>
@@ -117,7 +117,7 @@ include __DIR__ . "/include/sidebar.php";
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <a href="#pablo">Xem hết</a>
+                                    <a href="javascript: getAllPost();">Xem hết</a>
                                 </div>
                             </div>
                         </div>
@@ -130,7 +130,7 @@ include __DIR__ . "/include/sidebar.php";
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">date_range</i> Last 24 Hours
+                                    <a href="#">Xem hết</a>
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,7 @@ include __DIR__ . "/include/sidebar.php";
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">local_offer</i> Tracked from Github
+                                    <a href="#">Xem hết</a>
                                 </div>
                             </div>
                         </div>
@@ -156,7 +156,7 @@ include __DIR__ . "/include/sidebar.php";
                             </div>
                             <div class="card-footer">
                                 <div class="stats">
-                                    <i class="material-icons">update</i> Just Updated
+                                    <a href="#">Xem hết</a>
                                 </div>
                             </div>
                         </div>
@@ -164,11 +164,35 @@ include __DIR__ . "/include/sidebar.php";
                 </div>
 
                 <div class="row">
+                    <div class="col-lg-12 col-md-12" id="result" style="display: none">
+                        <div class="card">
+                            <div class="card-header card-header-warning">
+                                <h4 class="card-title">Card title</h4>
+                                <p class="card-category">Card title 2</p>
+                            </div>
+                            <div class="card-body table-responsive">
+                                <table class="table table-hover" id="table-result">
+                                    <thead class="text-warning">
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nội dung</th>
+                                        <th>Thời gian phê duyệt</th>
+                                        <th>Người phê duyệt</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div id="load-more-post" onclick="alert('clicked')"
+                                 style="padding: 12px; text-align: center;"><a>Xem thêm</a></div>
+                        </div>
+                    </div>
                     <?php
                     $recentlyApprovedPosts = $admin->getRecentlyPostApproved();
                     if (is_array($recentlyApprovedPosts) && count($recentlyApprovedPosts) > 0) {
                         ?>
-                        <div class="col-lg-6 col-md-12">
+                        <div class="col-lg-12 col-md-12">
                             <div class="card">
                                 <div class="card-header card-header-warning">
                                     <h4 class="card-title">Vừa được phê duyệt gần đây</h4>
@@ -189,8 +213,8 @@ include __DIR__ . "/include/sidebar.php";
                                             <tr>
                                             <td><?= $recentlyPost->id ?></td>
                                             <td><?php
-                                                if (strlen($recentlyPost->content) > 50) {
-                                                    echo substr($recentlyPost->content, 0, 50);
+                                                if (strlen($recentlyPost->content) > 200) {
+                                                    echo substr($recentlyPost->content, 0, 200) . "...";
                                                 } else echo $recentlyPost->content;
                                                 ?></td>
                                             <td><?= $recentlyPost->approval_time ?></td>
@@ -210,7 +234,7 @@ include __DIR__ . "/include/sidebar.php";
                     $recentlyNotYetApprovalPosts = $admin->getRecentlyPostNotYetApproval();
                     if (is_array($recentlyNotYetApprovalPosts) && count($recentlyNotYetApprovalPosts) > 0) {
                         ?>
-                        <div class="col-lg-6 col-md-12">
+                        <div class="col-lg-12 col-md-12">
                             <div class="card">
                                 <div class="card-header card-header-warning">
                                     <h4 class="card-title">Chưa được phê duyệt</h4>
@@ -231,8 +255,8 @@ include __DIR__ . "/include/sidebar.php";
                                             <tr>
                                             <td><?= $recentlyPost->id ?></td>
                                             <td><?php
-                                                if (strlen($recentlyPost->content) > 50) {
-                                                    echo substr($recentlyPost->content, 0, 50);
+                                                if (strlen($recentlyPost->content) > 200) {
+                                                    echo substr($recentlyPost->content, 0, 200) . "...";
                                                 } else echo $recentlyPost->content;
                                                 ?></td>
                                             <td><?= $recentlyPost->date_created ?></td>
@@ -273,6 +297,39 @@ include __DIR__ . "/include/sidebar.php";
         md.initDashboardPageCharts();
 
     });
+
+    function getAllPost(page = 0) {
+        $.ajax({
+            url: "./ajax/main.php?type=all%20post&page=" + page,
+            type: 'GET',
+            dataType: 'json',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            complete: function (response) {
+                console.log(response);
+                if (response.status === 200) {
+                    buildPost(response.responseJSON);
+                } else {
+                }
+            }
+        });
+    }
+
+    function buildPost(posts) {
+        if ((typeof posts).toLowerCase() !== "object" || posts == null || posts.length === 0) return;
+
+        $("#result").show();
+        $("#table-result tr").remove();
+        for (var i = 0; i < posts.length; i++) {
+            $("#table-result").append("<tr id=\"" + posts[i].id + "\">" +
+                "<td class=\"result-id\">" + posts[i].id + "</td>" +
+                "<td class=\"result-content\">" + ((posts[i].content.length > 200) ? (posts[i].content.substr(0, 200) + "...") : posts[i].content) + "</td>" +
+                "<td class=\"result-time-approval\">" + posts[i].approval_time + "</td>" +
+                "<td class=\"result-approval-by\">" + posts[i].approval_by + "</td>" +
+                "</tr>");
+        }
+    }
 </script>
 </body>
 
