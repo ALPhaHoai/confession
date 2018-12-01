@@ -53,9 +53,9 @@
           <entry key="dummy" value="11" />
           <entry key="htaccess" value="33" />
           <entry key="html" value="23" />
-          <entry key="md" value="87" />
+          <entry key="md" value="99" />
           <entry key="php" value="5853" />
-          <entry key="txt" value="41" />
+          <entry key="txt" value="53" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
@@ -63,7 +63,7 @@
           <entry key="CSS" value="1" />
           <entry key="HTML" value="23" />
           <entry key="PHP" value="5853" />
-          <entry key="PLAIN_TEXT" value="139" />
+          <entry key="PLAIN_TEXT" value="163" />
           <entry key="htaccess" value="33" />
         </counts>
       </usages-collector>
@@ -80,7 +80,7 @@
         <entry file="file://$PROJECT_DIR$/README.md">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="255">
-              <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+              <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
             </state>
           </provider>
         </entry>
@@ -367,7 +367,7 @@
       <workItem from="1538743722719" duration="213000" />
       <workItem from="1538814387207" duration="11000" />
       <workItem from="1539004024846" duration="824000" />
-      <workItem from="1543653508579" duration="823000" />
+      <workItem from="1543653508579" duration="1541000" />
     </task>
     <task id="LOCAL-00001" summary="test conflict">
       <created>1543653623873</created>
@@ -411,11 +411,32 @@
       <option name="project" value="LOCAL" />
       <updated>1543654217565</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="test conflict local-&gt;github">
+      <created>1543654367646</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1543654367646</updated>
+    </task>
+    <task id="LOCAL-00008" summary="clean readme">
+      <created>1543654541177</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1543654541177</updated>
+    </task>
+    <task id="LOCAL-00009" summary="clean readme">
+      <created>1543654915159</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1543654915159</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24798000" />
+    <option name="totallyTimeSpent" value="25516000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
@@ -480,7 +501,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test conflict" />
     <MESSAGE value="test conflict local-&gt;github" />
-    <option name="LAST_COMMIT_MESSAGE" value="test conflict local-&gt;github" />
+    <MESSAGE value="clean readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="clean readme" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -666,7 +688,7 @@
     <entry file="file://$PROJECT_DIR$/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
-          <caret line="15" column="8" selection-start-line="15" selection-start-column="8" selection-end-line="15" selection-end-column="8" />
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
         </state>
       </provider>
     </entry>
