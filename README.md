@@ -13,4 +13,5 @@ Truy cập: http://confession.com/admin/login.php
 Có thể đăng nhập với tài khoản admin@gmail.com | password
 Hoặc đăng nhập với Google (thêm email vào bảng admin)
 
-fsdfsdfs
+local
+server
