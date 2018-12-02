@@ -49,6 +49,16 @@ class post
         }
 
     }
+
+    public static function create($content, $user_id){
+        $db = db::singleton();
+        if($db->select_sql_one_row("SELECT * FROM " . TB_POST . " WHERE content = '" . db::validSql($content) . "'")) return false;
+        return $db->insert(
+            TB_POST,
+            ["content" => $content, "user_id" => $user_id]);
+    }
+
+
     public function getProperties(){
         if($this->rand){
             if($this->db->select_sql_one_row("SELECT * FROM ".TB_POST." WHERE approval = 'yes' ORDER BY RAND() LIMIT 1")){

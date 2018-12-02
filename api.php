@@ -12,10 +12,19 @@ require_once __DIR__ . "/class/comment.php";
 require_once __DIR__ . "/class/post.php";
 require_once __DIR__ . "/class/user.php";
 
-//check valid post params
-if (!isset($_POST['post_id'])) {
-    _return_error("missing post id");
+function isRequiredPost()
+{
+    return $_POST['edge'] !== "confession" || $_POST['action'] !== "create" ? true : false;
 }
+
+//check valid post params
+
+if (isRequiredPost()) {
+    if (!isset($_POST['post_id'])) {
+        _return_error("missing post_id");
+    }
+}
+
 if (!isset($_POST['edge'])) {
     _return_error("missing edge");
 }
@@ -24,19 +33,24 @@ if (!isset($_POST['action'])) {
 }
 
 $db = db::singleton();
-//check valid confession id (has approved)
-$post = new post($_POST['post_id']);
-if (!$post->getProperties()) {
-    _return_error("invalid post");
+
+if (isRequiredPost()) {
+    //check valid confession id (has approved)
+    $post = new post($_POST['post_id']);
+    if (!$post->getProperties()) {
+        _return_error("invalid post");
+    }
+    if (!$post->isApproved()) {
+        _return_error("invalid post");
+    }
 }
-if (!$post->isApproved()) {
-    _return_error("invalid post");
-}
+
 $user_ip = user::getUserIp();
 $user = new user($user_ip);
 if (!is_numeric($user->id)) {
     _return_error("sorry. We have a problem!");
 }
+
 
 switch ($_POST['edge']) {
     case "confession":
@@ -44,7 +58,26 @@ switch ($_POST['edge']) {
             switch ($_POST['action']) {
                 case "like":
                     {
-                        if($post->doLike($user->id)){
+                        if ($post->doLike($user->id)) {
+                            _return_success();
+                        } else {
+                            _return_error();
+                        }
+                        break;
+                    }
+                case "create":
+                    {
+                        if(!isset($_POST['content'])) {
+                            _return_error("missing content");
+                        }
+
+                        $content = trim($_POST['content']);
+
+                        if(strlen($content) < 10) {
+                            _return_error("content too short");
+                        }
+
+                        if (post::create($content, $user->id)) {
                             _return_success();
                         } else {
                             _return_error();
@@ -53,7 +86,7 @@ switch ($_POST['edge']) {
                     }
                 case "dislike":
                     {
-                        if($post->doDislike($user->id)){
+                        if ($post->doDislike($user->id)) {
                             _return_success();
                         } else {
                             _return_error();
@@ -82,12 +115,11 @@ switch ($_POST['edge']) {
                             if (is_array($data) && isset($data['comments'])) {
                                 if (count($data['comments']) > 0) {
                                     $return_data['comments'] = array();
-                                    foreach ($data['comments'] as $cmt){
+                                    foreach ($data['comments'] as $cmt) {
                                         $return_data['comments'][] = $cmt->getFakeInstance();
                                     }
                                     _return_success($return_data);
-                                }
-                                else _return_success("no more");
+                                } else _return_success("no more");
                             } else {
                                 _return_success("no more");
                             }

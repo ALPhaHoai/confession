@@ -10,11 +10,11 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     require_once __DIR__ . "/class/auth.php";
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $admin = new auth($email, $password);
+    $auth = new auth($email, $password);
     unset($_SESSION['login']);
-    if ($admin->login()) {
+    if ($auth->login()) {
         $_SESSION['login']['success'] = true;
-        $_SESSION['login']['id'] = $admin->id;
+        $_SESSION['login']['id'] = $auth->id;
         header("location:/admin/dashboard.php");
     } else {
         $_SESSION['login']['success'] = false;
