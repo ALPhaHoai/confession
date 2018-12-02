@@ -16,20 +16,21 @@ if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
 
     header('Content-Type: application/json');
 
+    $page = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page']) >= 0) ? intval($_GET['page']) : 0;
+
     switch (strtolower($_GET['type'])) {
         case "all post":
             {
-                if(isset($_GET['page'])){
-                    $page = $_GET['page'];
-                    if(is_numeric($page) && intval($page) >= 0){
-                        echo json_encode($admin->getAllPost($page));
-                        return ;
-                    }
-                }
-                break;
+                echo json_encode($admin->getAllPost($page));
+                return;
+            }
+        case "not verified":
+            {
+                echo json_encode($admin->getRecentlyPostNotYetApproval($page));
+                return;
             }
     }
 
 } else {
-   return ;
+    return;
 }

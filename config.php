@@ -16,7 +16,7 @@ define("TB_USER_CMT_REACTION", "confession.user_cmt_reaction");
 
 /////////////////// Cấu hình Database  ///////////////////
 $CONFIG_DATABASE['HOST'] = 'localhost';
-$CONFIG_DATABASE['SCHEMA'] = 'anigoo';
+$CONFIG_DATABASE['SCHEMA'] = 'confession';
 $CONFIG_DATABASE['USERNAME'] = 'root';
 $CONFIG_DATABASE['PASSWORD'] = "mysql";
 
