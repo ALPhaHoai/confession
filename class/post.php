@@ -52,7 +52,12 @@ class post
 
     public static function create($content, $user_id){
         $db = db::singleton();
-        if($db->select_sql_one_row("SELECT * FROM " . TB_POST . " WHERE content = '" . db::validSql($content) . "'")) return false;
+        //Check if has a confession has same content
+        if($db->select_sql_one_row("SELECT id FROM " . TB_POST . " WHERE content = '" . db::validSql($content) . "'")) return false;
+
+        //Check if user create 10 min confession before
+        if($db->select_sql_one_row("SELECT id FROM " . TB_POST . " WHERE user_id = '$user_id' AND date_created > date_sub(now(), interval 10 minute)")) return false;
+
         return $db->insert(
             TB_POST,
             ["content" => $content, "user_id" => $user_id]);

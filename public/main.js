@@ -9,6 +9,7 @@ var lastCommentId = (allCommentElement !== null && allCommentElement.hasAttribut
 var confessionId = (document.getElementById("feed") != null && document.getElementById("feed").hasAttribute("confession_id")) ? document.getElementById("feed").getAttribute("confession_id") : -1;
 var lastReaction = null;//true or false or null ~ like or dislike or nothing
 var lastTimeReaction = null;
+var lastTimeCreateConfession = null;
 const limitCommentPerPost = document.querySelectorAll(".all-comment > .UFIComment").length;
 
 /*
@@ -96,6 +97,13 @@ function opposive(reaction) {
 
 //Create confession
 function createConfession() {
+    if (lastTimeCreateConfession !== null) {
+        var nextTimeCanCreate = new Date().getMilliseconds() - lastTimeCreateConfession.getMilliseconds();
+        if (nextTimeCanCreate < 300000) {//3 sec
+            alert("Bạn vừa viết confession rồi.");
+            return;
+        }
+    }
     let content = document.getElementById('content').value;
     if (content === null || content === "") {
         alert("Bạn phải nhập nội dung");
@@ -107,9 +115,10 @@ function createConfession() {
     }
 
     sendAjax("confession", "create", {"content": content}, function (data) {
-        if (!data.error) {
+        if (data.error === false) {
             // Success!
             document.getElementById('content').value = '';
+            lastTimeCreateConfession = new Date();
             alert("Thêm thành công. Đang chờ phê duyệt");
         } else alert("Thêm thất bại");
     });
@@ -164,7 +173,7 @@ function loadMoreComment() {
     }
     else {
         sendAjax("confession", "loadMoreComment", {"lastCommentId": lastCommentId}, function (data) {
-            if (!data.error) {
+            if (data.error === false) {
                 // Success!
                 if (data.message === "no more") {
                     document.getElementById("load-more-comments").style.display = "none";
