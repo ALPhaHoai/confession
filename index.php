@@ -48,7 +48,7 @@ if($post->getProperties() && $post->isApproved()){
                 <ul class="nav nav-pills pull-right">
 <!--                    <li><a onclick="javascript:(document.getElementById('feed')) ? window.location.href='/confession/' + (parseInt(confessionId) + 1) : alert('Không có confession tiếp đâu!')">Tiếp</a></li>-->
                     <li><a href="/confession">Xem</a></li>
-                    <li><a onclick="javascript:alert('Tính năng đang trong quá trình phát triển');">Thêm</a></li>
+                    <li><a href="create.php">Thêm</a></li>
                     <li><a onclick="javascript:alert('Tell me your secret!');">Thông tin</a></li>
                 </ul>
                 <h4>Hãy thú tội đi nào</h4>
