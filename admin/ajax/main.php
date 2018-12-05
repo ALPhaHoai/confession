@@ -4,33 +4,58 @@
  * Date: 11/29/2018
  * Time: 2:41 PM
  */
-if (!isset($_GET['type'])) return;
-
 session_start();
 
-if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
-    require_once __DIR__ . "/../class/admin.php";
-    $id = $_SESSION['login']['id'];
+if (!isset($_SESSION['login']['success']) || !($_SESSION['login']['success'])) return;
 
-    $admin = new admin($id);
+require_once __DIR__ . "/../class/admin.php";
+$id = $_SESSION['login']['id'];
 
-    header('Content-Type: application/json');
+$admin = new admin($id);
 
-    $page = (isset($_GET['page']) && is_numeric($_GET['page']) && intval($_GET['page']) >= 0) ? intval($_GET['page']) : 0;
+header('Content-Type: application/json');
 
-    switch (strtolower($_GET['type'])) {
-        case "all post":
+$start = (isset($_GET['start']) && is_numeric($_GET['start']) && intval($_GET['start']) >= 0) ? intval($_GET['start']) : 0;
+$limit = (isset($_GET['limit']) && is_numeric($_GET['limit']) && intval($_GET['limit']) >= 0) ? intval($_GET['limit']) : 10;
+$post_id = (isset($_GET['post_id']) && is_numeric($_GET['post_id']) && intval($_GET['post_id']) >= 0) ? intval($_GET['post_id']) : null;
+$type = (isset($_GET['type']) && $_GET['type'] !== "") ? strtolower($_GET['type']) : null;
+
+if ($_SERVER['REQUEST_METHOD'] === "POST") {
+    if($post_id == null) return ;
+    if(!isset($_POST['action'])) return ;
+
+    switch (strtolower($_POST['action'])){
+        case "approval":
             {
-                echo json_encode($admin->getAllPost($page));
+                echo json_encode($admin->approvalPost($post_id));
                 return;
             }
-        case "not verified":
+        case "unapproval":
             {
-                echo json_encode($admin->getRecentlyPostNotYetApproval($page));
+                echo json_encode($admin->unapprovalPost($post_id));
                 return;
             }
     }
 
-} else {
     return;
+} else {
+    $order_field = (isset($_GET['order_field']) && $_GET['order_field'] !== "") ? strtolower($_GET['order_field']) : "date_created";
+    if($order_field !== "id" && $order_field !== "date_created" && $order_field !== "approval" && $order_field !== "cmt" && $order_field !== "like" &&
+        $order_field !== "dislike") $order_field = "date_created";
+    if($order_field === "like") $order_field = "`like`";
+    $order_by = (isset($_GET['order_by']) && ($_GET['order_by'] === "asc" || $_GET['order_by'] === "desc")) ? $_GET['order_by'] : "asc";
+
+    switch ($type) {
+        case "all post":
+            {
+                echo json_encode($admin->getAllPost($start, $limit, $order_field, $order_by));
+                return;
+            }
+        case "not verified":
+            {
+                echo json_encode($admin->getRecentlyPostNotYetApproval($start, $limit, $order_field, $order_by));
+                return;
+            }
+    }
 }
+

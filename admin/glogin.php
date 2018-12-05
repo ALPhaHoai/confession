@@ -33,7 +33,7 @@ if (isset($_SESSION['google_access_token']) && $_SESSION['google_access_token'])
     if ($admin->login()) {
         $_SESSION['login']['success'] = true;
         $_SESSION['login']['id'] = $admin->id;
-        header("location:/admin/dashboard.php");
+        header("location:/admin/index.php");
     } else {
         $_SESSION['login']['success'] = false;
         $_SESSION['login']['error_message'] = "Email không tồn tại trong hệ thống";

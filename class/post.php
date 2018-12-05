@@ -47,7 +47,6 @@ class post
         } else {
             $this->rand = true;
         }
-
     }
 
     public static function create($content, $user_id){

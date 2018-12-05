@@ -15,7 +15,7 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     if ($auth->login()) {
         $_SESSION['login']['success'] = true;
         $_SESSION['login']['id'] = $auth->id;
-        header("location:/admin/dashboard.php");
+        header("location:/admin/index.php");
     } else {
         $_SESSION['login']['success'] = false;
         $_SESSION['login']['error_message'] = "Sai email hoặc mật khẩu";

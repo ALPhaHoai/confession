@@ -71,10 +71,9 @@ class admin
     /*
      * $page: 1, 2, 3
      * */
-    public function getAllPost($page = 0)
+    public function getAllPost($start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
     {
-        $start = $page * $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'];
-        if ($this->db->select_sql("SELECT post.id, post.content, post.approval, post.approval_time, admin.name as approval_by, post.view, post.like, post.dislike, post.cmt, post.date_created FROM confession.post LEFT JOIN confession.admin ON post.approval_by = admin.id LIMIT $start," . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])) {
+        if ($this->db->select_sql("SELECT post.id, post.content, post.approval, post.approval_time, admin.name as approval_by, post.view, post.like, post.dislike, post.cmt, post.date_created FROM confession.post LEFT JOIN confession.admin ON post.approval_by = admin.id ORDER BY $order_field $order_by LIMIT $start,$limit")) {
             return $this->db->kq;
         } else return null;
     }
@@ -83,10 +82,9 @@ class admin
      * Danh sách các bài chưa được phê duyệt từ cũ tới mới
      *
      * */
-    public function getRecentlyPostNotYetApproval($page = 0)
+    public function getRecentlyPostNotYetApproval($start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
     {
-        $start = $page * $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'];
-        if ($this->db->select_sql("SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM " . TB_POST . " where user_id = uid) as num_user_post FROM " . TB_POST . " WHERE approval = 'not yet' ORDER BY date_created ASC LIMIT $start," . $GLOBALS['CONFIG_ADMIN']['LIMIT_POST'])) {
+        if ($this->db->select_sql("SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM " . TB_POST . " where user_id = uid) as num_user_post FROM " . TB_POST . " WHERE approval = 'not yet' ORDER BY $order_field $order_by LIMIT $start,$limit")) {
             return $this->db->kq;
         } else return null;
     }
@@ -100,4 +98,19 @@ class admin
             return $this->db->kq;
         } else return null;
     }
+
+    public function approvalPost($post_id){
+        if($this->db->select_sql_one_row("SELECT * FROM post WHERE id = $post_id")){
+            if("yes" === $this->db->kq->approval) return false;
+            return $this->db->execute("UPDATE post SET approval = 'yes', approval_by = $this->id WHERE id = $post_id");
+        } else return false;
+    }
+
+    public function unapprovalPost($post_id){
+        if($this->db->select_sql_one_row("SELECT * FROM post WHERE id = $post_id")){
+            if("no" === $this->db->kq->approval) return false;
+            return $this->db->execute("UPDATE post SET approval = 'no', approval_by = null WHERE id = $post_id");
+        } else return false;
+    }
+
 }
