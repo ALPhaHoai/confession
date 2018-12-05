@@ -12,9 +12,6 @@
                 <li>
                     <a href="list_post.php">Danh sách</a>
                 </li>
-                <li>
-                    <a href="search_post.php">Tìm kiếm</a>
-                </li>
             </ul>
         </li>
        <!-- <li>

@@ -71,9 +71,13 @@ class admin
     /*
      * $page: 1, 2, 3
      * */
-    public function getAllPost($start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
+    public function getAllPost($search_content = null, $start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
     {
-        if ($this->db->select_sql("SELECT post.id, post.content, post.approval, post.approval_time, admin.name as approval_by, post.view, post.like, post.dislike, post.cmt, post.date_created FROM confession.post LEFT JOIN confession.admin ON post.approval_by = admin.id ORDER BY $order_field $order_by LIMIT $start,$limit")) {
+        $sql = "SELECT post.id, post.content, post.approval, post.approval_time, admin.name as approval_by, post.view, post.like, post.dislike, post.cmt, post.date_created FROM confession.post LEFT JOIN confession.admin ON post.approval_by = admin.id";
+        if($search_content != null) $sql .= " WHERE post.content like '%" . db::validSql($search_content) . "%'";
+        $sql .= " ORDER BY $order_field $order_by LIMIT $start,$limit";
+
+        if ($this->db->select_sql($sql)) {
             return $this->db->kq;
         } else return null;
     }
@@ -82,9 +86,13 @@ class admin
      * Danh sách các bài chưa được phê duyệt từ cũ tới mới
      *
      * */
-    public function getRecentlyPostNotYetApproval($start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
+    public function getRecentlyPostNotYetApproval($search_content = null, $start = 0, $limit = 10, $order_field = "date_created", $order_by = "asc")
     {
-        if ($this->db->select_sql("SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM " . TB_POST . " where user_id = uid) as num_user_post FROM " . TB_POST . " WHERE approval = 'not yet' ORDER BY $order_field $order_by LIMIT $start,$limit")) {
+        $sql = "SELECT id, content, date_created, user_id as uid,(SELECT count(*) FROM confession.post where user_id = uid) as num_user_post FROM confession.post WHERE approval = 'not yet'";
+        if($search_content != null) $sql .= " AND post.content like '%" . db::validSql($search_content) . "%'";
+        $sql .= " ORDER BY $order_field $order_by LIMIT $start,$limit";
+
+        if ($this->db->select_sql($sql)) {
             return $this->db->kq;
         } else return null;
     }

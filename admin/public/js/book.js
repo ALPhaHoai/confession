@@ -8,8 +8,11 @@ var type = "all post";
 var pending = false;
 var timeagoInstance = timeago();
 
-var order_field = $('#order_field').selectpicker('val');
-var order_by = $('#order_by').selectpicker('val');
+var search_content;
+var order_field;
+var order_by;
+getInputData();
+var ajax_url ;
 
 function remove(id) {
     if (confirm('Are you sure?')) {
@@ -160,23 +163,34 @@ function doSearch(startInput = 0) {
     });
 }
 
+function getInputData() {
+    search_content = $("#search_content").val();
+    if(search_content != null) search_content = search_content.trim();
+    if(search_content === "") search_content = null;
+    order_field = $('#order_field').selectpicker('val');
+    order_by = $('#order_by').selectpicker('val');
+}
+
 function getPosts(startInput = 0) {
     if (pending) return;
     if (type == null) return;
     start = startInput;
     if(startInput === 0){
-        if(order_field === $('#order_field').selectpicker('val') && order_by === $('#order_by').selectpicker('val')) {
-            console.log("Chưa có thay đỗi gì");
-            return ;
-        }
-
-        order_field = $('#order_field').selectpicker('val');
-        order_by = $('#order_by').selectpicker('val');
+        getInputData();
     }
 
-    let ajax_url = AJAX_URL + "?type=" + type + "&start=" + startInput + "&limit=" + limit;
-    if(order_field != null) ajax_url += "&order_field=" + order_field;
-    if(order_by != null) ajax_url += "&order_by=" + order_by;
+    let new_ajax_url = AJAX_URL + "?type=" + type;
+    if(search_content != null) new_ajax_url += "&content=" + encodeURI(search_content);
+    new_ajax_url += "&start=" + startInput + "&limit=" + limit;
+
+    if(order_field != null) new_ajax_url += "&order_field=" + order_field;
+    if(order_by != null) new_ajax_url += "&order_by=" + order_by;
+
+    if(ajax_url === new_ajax_url) {
+        console.log("Chưa có thay đỗi gì");
+        return ;
+    }
+    else ajax_url = new_ajax_url;
 
     pending = true;
     $.ajax({
@@ -193,11 +207,7 @@ function getPosts(startInput = 0) {
             } else {
                 moreResult = false;
                 if (startInput === 0) {
-                    if (response.hasOwnProperty("responseJSON")) {
-                        alert(response.responseJSON.message);
-                    } else {
-                        alert("Đã có lỗi xảy ra");
-                    }
+                    alert("Đã có lỗi xảy ra");
                 }
             }
             pending = false;
