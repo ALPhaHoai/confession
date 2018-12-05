@@ -5,8 +5,9 @@ Hướng dẫn cài đặt
 1. Download và giải nén ra 1 folder trong htdocs
 2. Import file sql vào csdl
 3. Cấu hình file host trỏ confession.com -> local
-3. Thêm tên miền ảo confession.com vào xampp (file httpd-vhosts.conf)
-4. Truy cập http://confession.com
+4. Cấu hình csdl trong file config.php
+5. Thêm tên miền ảo confession.com vào xampp (file httpd-vhosts.conf)
+6. Truy cập http://confession.com
 
 Chức năng của admin:
 Truy cập: http://confession.com/admin/login.php
