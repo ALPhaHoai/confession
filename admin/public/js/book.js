@@ -12,7 +12,7 @@ var search_content;
 var order_field;
 var order_by;
 getInputData();
-var ajax_url ;
+var ajax_url;
 
 function remove(id) {
     if (confirm('Are you sure?')) {
@@ -50,7 +50,7 @@ function buildResult(data) {
     if ((typeof data).toLowerCase() !== "object" || data == null || data.length === 0) return;
     if (data.length < limit) moreResult = false;
 
-    if(start === 0){
+    if (start === 0) {
         $('#search-result tr[id^="post_"]').remove();
     }
 
@@ -165,8 +165,8 @@ function doSearch(startInput = 0) {
 
 function getInputData() {
     search_content = $("#search_content").val();
-    if(search_content != null) search_content = search_content.trim();
-    if(search_content === "") search_content = null;
+    if (search_content != null) search_content = search_content.trim();
+    if (search_content === "") search_content = null;
     order_field = $('#order_field').selectpicker('val');
     order_by = $('#order_by').selectpicker('val');
 }
@@ -175,20 +175,20 @@ function getPosts(startInput = 0) {
     if (pending) return;
     if (type == null) return;
     start = startInput;
-    if(startInput === 0){
+    if (startInput === 0) {
         getInputData();
     }
 
     let new_ajax_url = AJAX_URL + "?type=" + type;
-    if(search_content != null) new_ajax_url += "&content=" + encodeURI(search_content);
+    if (search_content != null) new_ajax_url += "&content=" + encodeURI(search_content);
     new_ajax_url += "&start=" + startInput + "&limit=" + limit;
 
-    if(order_field != null) new_ajax_url += "&order_field=" + order_field;
-    if(order_by != null) new_ajax_url += "&order_by=" + order_by;
+    if (order_field != null) new_ajax_url += "&order_field=" + order_field;
+    if (order_by != null) new_ajax_url += "&order_by=" + order_by;
 
-    if(ajax_url === new_ajax_url) {
+    if (ajax_url === new_ajax_url) {
         console.log("Chưa có thay đỗi gì");
-        return ;
+        return;
     }
     else ajax_url = new_ajax_url;
 
@@ -198,10 +198,19 @@ function getPosts(startInput = 0) {
         type: 'GET',
         complete: function (response) {
             if (response.status === 200) {
-                moreResult = true;
-                console.log(response.responseJSON);
-                buildResult(response.responseJSON);
-                start = startInput + limit;
+                if (response.responseText === "null") {
+                    moreResult = false;
+                    if (startInput === 0) {
+                        $('#search-result tr[id^="post_"]').remove();
+                        alert("Không có dữ liệu");
+                    }
+                }
+                else {
+                    moreResult = true;
+                    console.log(response.responseJSON);
+                    buildResult(response.responseJSON);
+                    start = startInput + limit;
+                }
             } else if (response.status === 0) {
                 alert("Không thể kết nối tới server");
             } else {
@@ -235,7 +244,6 @@ function subArrays(arr1, arr2) {
     }
     return sub_arr;
 }
-
 
 
 //Thay đỗi trạng thái icon thành disable (màu xám) và loại bỏ hàm javascript
