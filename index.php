@@ -7,7 +7,6 @@
  */
 require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/db.php";
-
 require_once __DIR__ . "/class/comment.php";
 require_once __DIR__ . "/class/post.php";
 require_once __DIR__ . "/class/user.php";
@@ -18,7 +17,6 @@ $main_page_title = "Confession";
 if(isset($_GET['id'])){
     $post =  new post($_GET['id']) ;
 } else $post = new post();
-
 
 if($post->getProperties() && $post->isApproved()){
     $comments = $post->getComments();
@@ -48,7 +46,7 @@ if($post->getProperties() && $post->isApproved()){
                 <ul class="nav nav-pills pull-right">
 <!--                    <li><a onclick="javascript:(document.getElementById('feed')) ? window.location.href='/confession/' + (parseInt(confessionId) + 1) : alert('Không có confession tiếp đâu!')">Tiếp</a></li>-->
                     <li><a href="/confession">Xem</a></li>
-                    <li><a href="create.php">Thêm</a></li>
+                    <li><a href="/create.php">Thêm</a></li>
                     <li><a onclick="javascript:alert('Tell me your secret!');">Thông tin</a></li>
                 </ul>
                 <h4>Hãy thú tội đi nào</h4>
