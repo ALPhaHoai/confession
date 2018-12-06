@@ -14,7 +14,9 @@ require_once __DIR__ . "/class/user.php";
 
 function isRequiredPost()
 {
-    return $_POST['edge'] !== "confession" || $_POST['action'] !== "create" ? true : false;
+    if(isset($_POST['action']) && $_POST['action'] !== "create") return true;
+    if(isset($_POST['edge']) && $_POST['edge'] !== "confession") return true;
+    return false;
 }
 
 //check valid post params
