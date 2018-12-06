@@ -52,25 +52,25 @@ class post
     public static function create($content, $user_id){
         $db = db::singleton();
         //Check if has a confession has same content
-        if($db->select_sql_one_row("SELECT id FROM " . TB_POST . " WHERE content = '" . db::validSql($content) . "'")) return false;
+        if($db->select_sql_one_row("SELECT id FROM confession.post WHERE content = '" . db::validSql($content) . "'")) return false;
 
         //Check if user create 10 min confession before
-        if($db->select_sql_one_row("SELECT id FROM " . TB_POST . " WHERE user_id = '$user_id' AND date_created > date_sub(now(), interval 10 minute)")) return false;
+        if($db->select_sql_one_row("SELECT id FROM confession.post WHERE user_id = '$user_id' AND date_created > date_sub(now(), interval 10 minute)")) return false;
 
         return $db->insert(
-            TB_POST,
+            "confession.post",
             ["content" => $content, "user_id" => $user_id]);
     }
 
 
     public function getProperties(){
         if($this->rand){
-            if($this->db->select_sql_one_row("SELECT * FROM ".TB_POST." WHERE approval = 'yes' ORDER BY RAND() LIMIT 1")){
+            if($this->db->select_sql_one_row("SELECT * FROM confession.post WHERE approval = 'yes' ORDER BY RAND() LIMIT 1")){
                 return $this->parseData($this->db->kq);
             } else return false;
         } else {
             if(!is_numeric($this->id)) return false;
-            if($this->db->select_sql_one_row("SELECT * FROM ".TB_POST." WHERE id = '$this->id'")){
+            if($this->db->select_sql_one_row("SELECT * FROM confession.post WHERE id = '$this->id'")){
                 return $this->parseData($this->db->kq);
             } else return false;
         }
@@ -87,7 +87,10 @@ class post
             $this->like = $data->like;
             $this->dislike = $data->dislike;
             $this->cmt = $data->cmt;
-            $this->date_created = new DateTime($data->date_created);
+         
+    $this->date_created = new DateTime($data->date_created);
+
+            
             return true;
         } else return false;
     }
@@ -124,7 +127,7 @@ class post
         if(!is_numeric($this->id)) return false;
         $bool_load_more_comments = $last_comment_id !== null;
 
-        $sql = "SELECT * FROM " . TB_COMMENT . " WHERE post_id = '$this->id'";
+        $sql = "SELECT * FROM confession.comment WHERE post_id = '$this->id'";
         if ($bool_load_more_comments) {
             //load more comment from $lastCommentId (ajax)
             settype($last_comment_id, "int");
@@ -165,7 +168,7 @@ class post
 
 
         //Check điều kiện 1
-        if ($this->db->select_sql_one_row("SELECT count(*) as count FROM ".TB_COMMENT." WHERE post_id = '$this->id' AND user_id = '$user_id' AND date_created > DATE_SUB(NOW(), INTERVAL 10 MINUTE)")) {
+        if ($this->db->select_sql_one_row("SELECT count(*) as count FROM confession.comment WHERE post_id = '$this->id' AND user_id = '$user_id' AND date_created > DATE_SUB(NOW(), INTERVAL 10 MINUTE)")) {
             $count = $this->db->kq->count;
             //bình luận quá nhiều
             if (is_numeric($count) && intval($count) > 10) {
@@ -176,7 +179,7 @@ class post
 
         $last_comment_id = $this->getLastCommenthasContent($comment_content, $user_id);
         if ($last_comment_id === null) {
-            if (!$this->db->insert(TB_COMMENT, ["post_id" => $this->id, "user_id" => $user_id, "content" => $comment_content])) return false;
+            if (!$this->db->insert("confession.comment", ["post_id" => $this->id, "user_id" => $user_id, "content" => $comment_content])) return false;
             $last_comment_id = $this->getLastCommenthasContent($comment_content, $user_id);
         }
 
@@ -193,7 +196,7 @@ class post
      * */
     private function getLastCommenthasContent($comment_content, $user_id)
     {
-        if ($this->db->select_sql_one_row("SELECT id FROM ".TB_COMMENT." WHERE post_id = '$this->id' AND user_id = '$user_id' AND content like \"" . db::validSql($comment_content) . "\" AND date_created > DATE_SUB(NOW(), INTERVAL 1 MINUTE) ")) {
+        if ($this->db->select_sql_one_row("SELECT id FROM confession.comment WHERE post_id = '$this->id' AND user_id = '$user_id' AND content like \"" . db::validSql($comment_content) . "\" AND date_created > DATE_SUB(NOW(), INTERVAL 1 MINUTE) ")) {
             $comment_id = $this->db->kq->id;
             if (is_numeric($comment_id)) {
                 settype($comment_id, "int");
@@ -206,7 +209,7 @@ class post
      * Tăng thêm 1 lượt view
      * */
     public function increaseView(){
-        return $this->db->execute("UPDATE " . TB_POST . " SET view = view + 1 WHERE id = '$this->id'");
+        return $this->db->execute("UPDATE confession.post SET view = view + 1 WHERE id = '$this->id'");
     }
 
 }
