@@ -98,8 +98,8 @@ function opposive(reaction) {
 //Create confession
 function createConfession() {
     if (lastTimeCreateConfession !== null) {
-        var nextTimeCanCreate = new Date().getMilliseconds() - lastTimeCreateConfession.getMilliseconds();
-        if (nextTimeCanCreate < 300000) {//3 sec
+        var nextTimeCanCreate = new Date().getTime() - lastTimeCreateConfession.getTime();
+        if (nextTimeCanCreate < 3000) {//3 sec
             alert("Bạn vừa viết confession rồi.");
             return;
         }
