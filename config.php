@@ -6,6 +6,8 @@
  * Time: 1:42 PM
  */
 
+date_default_timezone_set('Asia/Ho_Chi_Minh');
+
 define("LIMIT_COMMENT_PER_CONFESSION", 10);
 define("TB_ADMIN", "confession.admin");
 define("TB_COMMENT", "confession.comment");
