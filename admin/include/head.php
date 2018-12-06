@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+require_once __DIR__ . "/../lib/function.php";
+
 if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
     require_once __DIR__ . "/../class/admin.php";
     $id = $_SESSION['login']['id'];
@@ -7,7 +10,7 @@ if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
     $totalNotYetApproval = $admin->getTotalPostNotYetApproval();
 } else {
     unset($_SESSION['login']);
-    header("location:/admin/login.php");
+    header("location:/admin/login.php?continue=" . urlencode(curentUrl()));
 }
 ?>
 

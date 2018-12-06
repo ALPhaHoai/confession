@@ -6,6 +6,7 @@
  * Time: 3:31 PM
  */
 session_start();
+
 require_once __DIR__ . "/../vendor/google/autoload.php";
 require_once __DIR__ . "/../config.php";
 require_once __DIR__ . "/class/auth.php";
@@ -23,7 +24,6 @@ if (isset($_GET['reset'])) {
     unset($_SESSION['google_access_token']);
 }
 
-
 if (isset($_SESSION['google_access_token']) && $_SESSION['google_access_token']) {
     $client->setAccessToken($_SESSION['google_access_token']);
     $oAuth = new Google_Service_Oauth2($client);
@@ -33,11 +33,11 @@ if (isset($_SESSION['google_access_token']) && $_SESSION['google_access_token'])
     if ($admin->login()) {
         $_SESSION['login']['success'] = true;
         $_SESSION['login']['id'] = $admin->id;
-        header("location:/admin/index.php");
+        header("location: " . (isset($_GET['continue']) ? $_GET['continue'] : "/admin/index.php"));
     } else {
         $_SESSION['login']['success'] = false;
         $_SESSION['login']['error_message'] = "Email không tồn tại trong hệ thống";
-        header("location:/admin/login.php");
+        header("location: /admin/login.php");
     }
 } else {
     if (!isset($_GET['code'])) {

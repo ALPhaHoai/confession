@@ -1,9 +1,9 @@
 <!--Tài khoản đăng nhập: alphahoai@gmail.com | 12345678 hoặc admin@gmail.com | password-->
 <?php
 session_start();
-if(isset($_SESSION['login']['success']) && $_SESSION['login']['success']){
-    header("location:/admin/dashboard.php");
-    return ;
+if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
+    header("location:/admin/index.php");
+    return;
 }
 
 if (isset($_POST['email']) && isset($_POST['password'])) {
@@ -15,7 +15,8 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     if ($auth->login()) {
         $_SESSION['login']['success'] = true;
         $_SESSION['login']['id'] = $auth->id;
-        header("location:/admin/index.php");
+        header("location: " . (isset($_GET['continue']) ? $_GET['continue'] : "/admin/index.php"));
+        return ;
     } else {
         $_SESSION['login']['success'] = false;
         $_SESSION['login']['error_message'] = "Sai email hoặc mật khẩu";
@@ -42,11 +43,11 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
     <div class="container-login100">
         <div class="wrap-login100">
             <?php
-            if(isset($_SESSION['login']['success'])){
-                if($_SESSION['login']['success'] === false){
+            if (isset($_SESSION['login']['success'])) {
+                if ($_SESSION['login']['success'] === false) {
                     echo "<div style='color: #a94442;background-color: #f2dede;border-color: #ebccd1;padding: 15px;margin-bottom: 20px;   border: 1px solid transparent;'>" . $_SESSION['login']['error_message'] . "</div>";
                 } else {
-                    header("location:/admin/dashboard.php");
+                    header("location:" . (isset($_GET['continue']) ? isset($_GET['continue']) : "/admin/index.php"));
                 }
             }
             ?>
@@ -84,7 +85,8 @@ if (isset($_POST['email']) && isset($_POST['password'])) {
                                 data-gapiattached="true">
                             <div style="border-radius: 2px; background-color: rgb(255, 255, 255); display: inline-block; height: 25px; margin-left: 7px; text-align: center; width: 25px;">
                                 <div style="position: relative; margin: 2px auto auto;">
-                                    <svg height="20" viewBox="0 0 512 512" width="20" xmlns="http://www.w3.org/2000/svg">
+                                    <svg height="20" viewBox="0 0 512 512" width="20"
+                                         xmlns="http://www.w3.org/2000/svg">
                                         <g fill="none" fill-rule="evenodd">
                                             <path d="M482.56 261.36c0-16.73-1.5-32.83-4.29-48.27H256v91.29h127.01c-5.47 29.5-22.1 54.49-47.09 71.23v59.21h76.27c44.63-41.09 70.37-101.59 70.37-173.46z"
                                                   fill="#4285f4"></path>
