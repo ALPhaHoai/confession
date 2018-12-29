@@ -28,8 +28,6 @@ $main_page_title = "Create Confession";
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript" language="javascript" src="/confession/public/main.js"></script>
 </head>
 <body>
 <link rel="stylesheet" type="text/css" href="/confession/public/style.css">
@@ -38,9 +36,8 @@ $main_page_title = "Create Confession";
         <div class="goo-white-card-has-padding">
             <div class="header">
                 <ul class="nav nav-pills pull-right">
-                    <!--                    <li><a onclick="javascript:(document.getElementById('feed')) ? window.location.href='/confession/' + (parseInt(confessionId) + 1) : alert('Không có confession tiếp đâu!')">Tiếp</a></li>-->
-                    <li><a href="/confession">Xem</a></li>
-                    <li><a onclick="javascript:alert('Tell me your secret!');">Thông tin</a></li>
+                    <li><a class="btn" href="/confession">Khác</a></li>
+                    <li><a class="btn" onclick="javascript:alert('Tell me your secret!');">Thông tin</a></li>
                 </ul>
                 <h4>Hãy thú tội đi nào</h4>
             </div>
@@ -129,14 +126,15 @@ $main_page_title = "Create Confession";
                     }
 
                     .form-style-1 input[type=submit], .form-style-1 input[type=button] {
-                        background: #4B99AD;
+                        background: #0084ff;
                         padding: 8px 15px 8px 15px;
                         border: none;
-                        color: #fff;
+                        color: #dce2ff;
                     }
 
                     .form-style-1 input[type=submit]:hover, .form-style-1 input[type=button]:hover {
-                        background: #4691A4;
+                        background: #1b90ff;
+                        color: #fff;
                         box-shadow: none;
                         -moz-box-shadow: none;
                         -webkit-box-shadow: none;
@@ -152,12 +150,14 @@ $main_page_title = "Create Confession";
     </div> <!-- /container -->
 </div>
 </body>
+<script type="text/javascript" language="javascript" src="/confession/public/library.js"></script>
+<script type="text/javascript" language="javascript" src="/confession/public/mainv2.js"></script>
 <script>
     $(document).ready(function () {
         //Add new confession
         $('#create_confession').on('submit', function (e) {
             e.preventDefault();
-            createConfession();
+            PostManager.create();
         });
     });
 </script>

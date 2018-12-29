@@ -1,4 +1,4 @@
-.UFICommentAuthorWithPresence, ._3emk._3emk, ._4ar- ._3emk, ._5pcp, ._5v9k .UFIComment .UFIImageBlockImage, ._sa_, .all-comment .UFIComment {
+.UFICommentAuthorWithPresence, ._3emk._3emk, ._4ar- ._3emk, ._5pcp, ._5v9k .UFIComment .UFIImageBlockImage, ._sa_, #all-comment .UFIComment {
     position: relative
 }
 
@@ -10,7 +10,7 @@
     text-decoration-line: underline
 }
 
-._ipn._ipn a:hover, .send-comment:hover, .write-comment .send-comment, a:hover {
+._ipn._ipn a:hover, #send-comment:hover, .write-comment #send-comment, a:hover {
     text-decoration-style: initial;
     text-decoration-color: initial
 }
@@ -56,7 +56,7 @@ img.avatar {
     font-weight: 400
 }
 
-._3emk._3emk, ._3km1 a, .send-comment2 a {
+._3emk._3emk, ._3km1 a, #send-comment2 a {
     outline-color: initial;
     outline-style: none;
     outline-width: initial
@@ -332,7 +332,7 @@ body {
     user-select: none;
 }
 
-#load-more-comments, .all-comment .first-comment {
+#load-more-comments, #all-comment .UFIComment:first-child {
     border-top-width: 1px;
     border-top-style: solid;
     border-top-color: #e1e2e3
@@ -413,7 +413,7 @@ body {
     transition-property: none
 }
 
-._125r._a7s ._524d a:active, .send-comment {
+._125r._a7s ._524d a:active, #send-comment {
     transition-duration: .2s;
     transition-delay: 0s
 }
@@ -433,7 +433,7 @@ body {
     filter: brightness(100%)
 }
 
-.all-comment {
+#all-comment {
     color: #1d2129;
     overflow-x: visible;
     overflow-y: visible;
@@ -444,13 +444,13 @@ body {
     padding: 4px
 }
 
-.all-comment .UFIComment {
+#all-comment .UFIComment {
     margin: 0 12px;
     padding: 4px 0;
     background-color: #fff
 }
 
-.all-comment .UFIComment.first-comment {
+#all-comment .UFIComment:first-child  {
     padding-top: 8px
 }
 
@@ -534,7 +534,7 @@ body {
     padding-top: 3px
 }
 
-.all-comment._3-a6._4eno .UFICommentActions {
+#all-comment._3-a6._4eno .UFICommentActions {
     font-size: 12px;
     line-height: 12px;
     margin-bottom: 3px;
@@ -579,26 +579,26 @@ a {
     cursor: pointer
 }
 
-.send-comment:hover, .write-comment .send-comment {
+#send-comment:hover, .write-comment #send-comment {
     text-decoration-line: none
 }
 
-.send-comment {
+#send-comment {
     cursor: pointer;
     transition-timing-function: ease;
     transition-property: opacity
 }
 
-.send-comment:active {
+#send-comment:active {
     opacity: .2;
     transition-duration: 0s
 }
 
-.send-comment:focus:not(:active) {
+#send-comment:focus:not(:active) {
     opacity: .6
 }
 
-._3km1 a, .send-comment2 a {
+._3km1 a, #send-comment2 a {
     display: inline-block;
     height: 32px;
     vertical-align: top;
@@ -606,7 +606,7 @@ a {
     padding: 0
 }
 
-.write-comment .send-comment {
+.write-comment #send-comment {
     text-overflow: ellipsis;
     color: #0084ff;
     font-size: .9em;

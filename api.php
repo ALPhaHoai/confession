@@ -14,8 +14,8 @@ require_once __DIR__ . "/class/user.php";
 
 function isRequiredPost()
 {
-    if(isset($_POST['action']) && $_POST['action'] !== "create") return true;
-    if(isset($_POST['edge']) && $_POST['edge'] !== "confession") return true;
+    if (isset($_POST['action']) && $_POST['action'] !== "create") return true;
+    if (isset($_POST['edge']) && $_POST['edge'] !== "confession") return true;
     return false;
 }
 
@@ -23,15 +23,15 @@ function isRequiredPost()
 
 if (isRequiredPost()) {
     if (!isset($_POST['post_id'])) {
-        _return_error("missing post_id");
+        echo_error("missing post_id");
     }
 }
 
 if (!isset($_POST['edge'])) {
-    _return_error("missing edge");
+    echo_error("missing edge");
 }
 if (!isset($_POST['action'])) {
-    _return_error("what is your action?");
+    echo_error("what is your action?");
 }
 
 $db = db::singleton();
@@ -40,58 +40,72 @@ if (isRequiredPost()) {
     //check valid confession id (has approved)
     $post = new post($_POST['post_id']);
     if (!$post->getProperties()) {
-        _return_error("invalid post");
+        echo_error("invalid post");
     }
     if (!$post->isApproved()) {
-        _return_error("invalid post");
+        echo_error("invalid post");
     }
 }
 
 $user_ip = user::getUserIp();
 $user = new user($user_ip);
 if (!is_numeric($user->id)) {
-    _return_error("sorry. We have a problem!");
+    echo_error("sorry. We have a problem!");
 }
 
 
-switch ($_POST['edge']) {
+switch (mb_strtolower($_POST['edge'])) {
     case "confession":
         {
-            switch ($_POST['action']) {
-                case "like":
+            switch (mb_strtolower($_POST['action'])) {
+                case "reaction":
                     {
-                        if ($post->doLike($user->id)) {
-                            _return_success();
+                        if (isset($_POST['type'])) {
+                            switch (mb_strtolower($_POST['type'])) {
+                                case "like":
+                                    {
+                                        if ($post->doLike($user->id)) {
+                                            echo_success();
+                                        } else {
+                                            echo_error();
+                                        }
+                                    }
+                                case "dislike":
+                                    {
+                                        if ($post->doDislike($user->id)) {
+                                            echo_success();
+                                        } else {
+                                            echo_error();
+                                        }
+                                    }
+                                default:
+                                    {
+                                        echo_error("Invalid type reaction");
+                                    }
+                            }
+
                         } else {
-                            _return_error();
+                            echo_error("Mising type reaction");
                         }
+
                         break;
                     }
                 case "create":
                     {
-                        if(!isset($_POST['content'])) {
-                            _return_error("missing content");
+                        if (!isset($_POST['content'])) {
+                            echo_error("missing content");
                         }
 
                         $content = trim($_POST['content']);
 
-                        if(strlen($content) < 10) {
-                            _return_error("content too short");
+                        if (strlen($content) < 10) {
+                            echo_error("content too short");
                         }
 
                         if (post::create($content, $user->id)) {
-                            _return_success();
+                            echo_success();
                         } else {
-                            _return_error();
-                        }
-                        break;
-                    }
-                case "dislike":
-                    {
-                        if ($post->doDislike($user->id)) {
-                            _return_success();
-                        } else {
-                            _return_error();
+                            echo_error();
                         }
                         break;
                     }
@@ -101,69 +115,84 @@ switch ($_POST['edge']) {
                             $content = urldecode($_POST['content']);
                             $comment_id = $post->doComment($content, $user->id);
                             if (is_numeric($comment_id)) {
-                                _return_success(["comment_id" => $post->id . "_" . $comment_id]);
-                            } else _return_error("insert comment error");
+                                echo_success("Comment success", ["comment_id" => $post->id . "_" . $comment_id, "post_id" => $post->id]);
+                            } else echo_error("insert comment error");
                         } else {
-                            _return_error("mising comment content");
+                            echo_error("mising comment content");
                         }
                         break;
                     }
-                case "loadMoreComment":
+                case "load_more_comment":
                     {
-                        if (isset($_POST['lastCommentId'])) {
-                            $last_comment_id = comment::parseCommentId($_POST['lastCommentId']);
-                            if ($last_comment_id === null) return;
-                            $data = $post->getComments($last_comment_id);
-                            if (is_array($data) && isset($data['comments'])) {
-                                if (count($data['comments']) > 0) {
-                                    $return_data['comments'] = array();
-                                    foreach ($data['comments'] as $cmt) {
-                                        $return_data['comments'][] = $cmt->getFakeInstance();
-                                    }
-                                    _return_success($return_data);
-                                } else _return_success("no more");
-                            } else {
-                                _return_success("no more");
+                        if (isset($_POST['last_comment_id'])) {
+                            $last_comment_id = comment::parseCommentId($_POST['last_comment_id'], $post->id);
+                            if ($last_comment_id === null) {
+                                echo_error("Invalid last_comment_id", ["comment_id" => $_POST['last_comment_id']]);
                             }
-                            return;
-                        } else _return_error("missing last comment");
+                        } else {
+                            $last_comment_id = null;
+                        }
+                        $data = $post->getComments($last_comment_id);
+                        if (is_array($data) && isset($data['comments']) && count($data['comments']) > 0) {
+                            $comments = array();
+                            foreach ($data['comments'] as $cmt) {
+                                $comments[] = $cmt->getFakeInstance();
+                            }
+                            echo_success("Load more comment success", ['data' => $comments]);
+                        } else echo_success("No more comment", ['No_More' => true]);
                     }
                 default:
                     {
-                        _return_error("invalid action");
+                        echo_error("invalid action", ["action" => $_POST['action']]);
                     }
             }
         }
     case "comment":
         {
             if (isset($_POST['comment_id'])) {
-                $comment_id = $_POST['comment_id'];
-                if ($comment_id == null || !startsWith($comment_id, $post->id . "_")) return;
-                $comment_id = explode("_", $comment_id)[1];
-                if (!is_numeric($comment_id)) return;
-                settype($comment_id, "int");
+                $comment_id = comment::parseCommentId($_POST['comment_id'], $post->id);
+                if (!is_numeric($comment_id)) {
+                    echo_error("Invalid comment id", ["comment_id" => $_POST['comment_id'], 'post_id' => $post->id]);
+                }
                 $comment = new comment($comment_id);
 
             } else return;
 
-            switch ($_POST['action']) {
-                case "like":
+            switch (mb_strtolower($_POST['action'])) {
+                case "reaction":
                     {
-                        if ($comment->doLike($user->id)) {
-                            _return_success();
-                        } else _return_error();
-                        break;
-                    }
-                case "dislike":
-                    {
-                        if ($comment->doDislike($user->id)) {
-                            _return_success();
-                        } else _return_error();
+
+                        if (isset($_POST['type'])) {
+                            switch (mb_strtolower($_POST['type'])) {
+                                case "like":
+                                    {
+                                        if ($comment->doLike($user->id)) {
+                                            echo_success();
+                                        } else echo_error();
+                                        break;
+                                    }
+                                case "dislike":
+                                    {
+                                        if ($comment->doDislike($user->id)) {
+                                            echo_success();
+                                        } else echo_error();
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        echo_error("Invalid type reaction");
+                                    }
+                            }
+
+                        } else {
+                            echo_error("Mising type reaction");
+                        }
+
                         break;
                     }
                 default:
                     {
-                        echo "Error";
+                        echo_error("invalid action", ["action" => $_POST['action']]);
                     }
             }
         }
@@ -171,27 +200,28 @@ switch ($_POST['edge']) {
 
     default:
         {
-            echo "Error";
+            echo_error("invalid edge", ["edge" => $_POST['edge']]);
         }
 }
 
 
-function _return_error($message = null)
+function echo_error($message = null, $param = [])
 {
-    _return(true, $message);
+    _return(false, $message, $param);
 }
 
-function _return_success($message = null)
+function echo_success($message = null, $param = [])
 {
-    _return(false, $message);
+    _return(true, $message, $param);
 }
 
-function _return($value, $message = null)
+function _return($value, $message = null, $param = [])
 {
-    $a["error"] = $value;
+    if (!is_array($param)) $param = [];
+    $param["success"] = $value;
     if ($message !== null) {
-        $a["message"] = $message;
+        $param["message"] = $message;
     }
-    print_r(json_encode($a));
+    print_r(json_encode($param));
     exit();
 }

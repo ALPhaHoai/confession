@@ -28,6 +28,8 @@ class comment
             "comment" => $this->getContent(),
             "confession_id" => $this->post_id,
             "time_post" => $this->date_created->format('d/m/Y'),
+            "like" => $this->like,
+            "dislike" => $this->dislike,
         ];
         return $fake;
     }
@@ -113,9 +115,13 @@ class comment
         return (strlen($content) >= 5) ? $content : null;
     }
 
-    public static function parseCommentId($id)
+    public static function parseCommentId($id, $post_id = null)
     {
         if ($id !== null) {
+            if ($post_id != null && !startsWith($id, $post_id . "_")) {
+                return null;
+            }
+
             if (strpos($id, '_') !== false) {
                 $id = explode("_", $id)[1];
             }

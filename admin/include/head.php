@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once __DIR__ . "/../lib/function.php";
+require_once __DIR__ . "/../../untils/function.php";
 
 if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
     require_once __DIR__ . "/../class/admin.php";
@@ -43,7 +43,7 @@ if (isset($_SESSION['login']['success']) && $_SESSION['login']['success']) {
 <script src="./public/js/bootstrap-select.js"></script>
 <link href="./public/css/bootstrap-select.min.css" rel="stylesheet">
 
-<script src="./public/js/book.js"></script>
+<script src="./public/js/admin.js"></script>
 
 
 

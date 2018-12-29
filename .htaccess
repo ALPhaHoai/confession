@@ -4,14 +4,11 @@ RewriteOptions Inherit
 Options All -Indexes
 
 #Redirect all www traffic to the non-www version of site (prevents possible duplicate content)
-RewriteCond %{HTTP_HOST} !^confession.com$ [NC]
-RewriteRule ^(.*)$ http://confession.com/$1 [L,R=301]
-
-DirectoryIndex ./index.php
+RewriteCond %{HTTP_HOST} !^confession.anigoo.net$ [NC]
+RewriteRule ^(.*)$ http://confession.anigoo.net/$1 [L,R=301]
 
 #Remove last / in url
-RewriteRule ^(.*)/$ http://confession.com/$1 [L,R=301]
-
+RewriteRule ^(.*)/$ http://confession.anigoo.net/$1 [L,R=301]
 RewriteRule ^confession/public/(.*)$ ./public/$1 [L]
 RewriteRule ^confession/api$ ./api.php [L]
 RewriteRule ^confession/(.*)$ ./index.php?id=$1 [L]

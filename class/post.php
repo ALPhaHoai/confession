@@ -122,13 +122,13 @@ class post
             "post_id = '$this->id' AND user_id = '$user_id'");
     }
 
-    public function getComments($last_comment_id = null)
+    public function getComments($last_comment_id = null, $total_include = false)
     {
         if(!is_numeric($this->id)) return false;
-        $bool_load_more_comments = $last_comment_id !== null;
 
         $sql = "SELECT * FROM confession.comment WHERE post_id = '$this->id'";
-        if ($bool_load_more_comments) {
+
+        if (is_numeric($last_comment_id)) {
             //load more comment from $lastCommentId (ajax)
             settype($last_comment_id, "int");
             $sql .= " AND id > '$last_comment_id'";
@@ -145,7 +145,7 @@ class post
                 }
             }
 
-            if (!$bool_load_more_comments && $this->db->select_sql_one_row("SELECT count(*) as total FROM ".TB_COMMENT." WHERE post_id = '$this->id'")) {
+            if ($total_include && $this->db->select_sql_one_row("SELECT count(*) as total FROM ".TB_COMMENT." WHERE post_id = '$this->id'")) {
                 $result['total'] = $this->db->kq->total;
             }
             return $result;

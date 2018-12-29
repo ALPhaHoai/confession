@@ -4,8 +4,8 @@ function isUnsignedNumber(str) {
 
 var isFirstLoadMoreComment = true;
 const endPointApi = "/confession/api";
-var allCommentElement = document.querySelector(".all-comment > .UFIComment:last-child");
-var lastCommentId = (allCommentElement !== null && allCommentElement.hasAttribute("comment_id")) ? allCommentElement.getAttribute("comment_id") : null;
+var lastCommentElement = document.querySelector(".all-comment > .UFIComment:last-child");
+var lastCommentId = (lastCommentElement !== null && lastCommentElement.hasAttribute("comment_id")) ? lastCommentElement.getAttribute("comment_id") : null;
 var confessionId = (document.getElementById("feed") != null && document.getElementById("feed").hasAttribute("confession_id")) ? document.getElementById("feed").getAttribute("confession_id") : -1;
 var lastReaction = null;//true or false or null ~ like or dislike or nothing
 var lastTimeReaction = null;
