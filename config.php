@@ -19,8 +19,8 @@ define("TB_USER_CMT_REACTION", "confession.user_cmt_reaction");
 /////////////////// Cấu hình Database  ///////////////////
 $CONFIG_DATABASE['HOST'] = 'localhost';
 $CONFIG_DATABASE['SCHEMA'] = 'confession';
-$CONFIG_DATABASE['USERNAME'] = 'root';
-$CONFIG_DATABASE['PASSWORD'] = "mysql";
+$CONFIG_DATABASE['USERNAME'] = 'root';//Đỗi lại username mysql của bạn
+$CONFIG_DATABASE['PASSWORD'] = "mysql";//Đỗi lại password mysql của bạn
 
 define("ADMIN_SALT_PASSWORD", "XinchaoVietNam2018");
 
