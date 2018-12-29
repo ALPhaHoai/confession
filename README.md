@@ -12,7 +12,7 @@ Confession website
 
 
 ### Chức năng của admin:
-Truy cập: http://confession.com/admin/login.php
+Truy cập: http://confession.anigoo.net/admin/list_post.php
 Có thể đăng nhập với tài khoản admin@gmail.com | password
 Hoặc đăng nhập với Google (thêm email vào bảng admin)
 
